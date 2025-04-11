@@ -76,24 +76,27 @@ class AccountManager:
         if not formato_concept.fullmatch(concept):
             raise AccountManagementException ("Invalid concept format")
 
-    def validate_transfer_date(self, t_d):
+
+    def validate_transfer_date(self, transfer_date):
         """validates the arrival date format  using regex"""
-        mr = re.compile(r"^(([0-2]\d|3[0-1])\/(0\d|1[0-2])\/\d\d\d\d)$")
-        res = mr.fullmatch(t_d)
-        if not res:
+        formato_transfer_date = re.compile(r"^(([0-2]\d|3[0-1])\/(0\d|1["
+                                r"0-2])\/\d\d\d\d)$")
+        if not formato_transfer_date.fullmatch(transfer_date):
             raise AccountManagementException("Invalid date format")
 
         try:
-            my_date = datetime.strptime(t_d, "%d/%m/%Y").date()
-        except ValueError as ex:
-            raise AccountManagementException("Invalid date format") from ex
+            fecha_convertida = datetime.strptime(transfer_date, "%d/%m/%Y").date()
+        except ValueError as value_error:
+            raise AccountManagementException("Invalid date format") from (
+                value_error)
 
-        if my_date < datetime.now(timezone.utc).date():
+        fecha_actual = datetime.now(timezone.utc).date()
+        if fecha_convertida < fecha_actual:
             raise AccountManagementException("Transfer date must be today or later.")
 
-        if my_date.year < 2025 or my_date.year > 2050:
+        if fecha_convertida.year < 2025 or fecha_convertida.year > 2050:
             raise AccountManagementException("Invalid date format")
-        return t_d
+        return transfer_date
 
     #pylint: disable=too-many-arguments
     def transfer_request(self, from_iban: str,
