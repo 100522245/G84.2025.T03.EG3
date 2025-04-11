@@ -225,10 +225,10 @@ class AccountManager:
         try:
             with open(TRANSACTIONS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
                 input_list = json.load(file)
-        except FileNotFoundError as ex:
-            raise AccountManagementException("Wrong file  or file path") from ex
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        except FileNotFoundError as file_error:
+            raise AccountManagementException("Wrong file  or file path") from file_error
+        except json.JSONDecodeError as json_error:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
         return input_list
 
 
