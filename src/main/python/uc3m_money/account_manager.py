@@ -171,52 +171,52 @@ class AccountManager:
         """manages the deposits received for accounts"""
         try:
             with open(input_file, "r", encoding="utf-8", newline="") as file:
-                i_d = json.load(file)
-        except FileNotFoundError as ex:
-            raise AccountManagementException("Error: file input not found") from ex
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
+                datos_deposito = json.load(file)
+        except FileNotFoundError as file_error:
+            raise AccountManagementException("Error: file input not found") from file_error
+        except json.JSONDecodeError as json_error:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
 
         # comprobar valores del fichero
         try:
-            deposit_iban = i_d["IBAN"]
-            deposit_amount = i_d["AMOUNT"]
-        except KeyError as e:
-            raise AccountManagementException("Error - Invalid Key in JSON") from e
+            iban = datos_deposito["IBAN"]
+            amount = datos_deposito["AMOUNT"]
+        except KeyError as key_error:
+            raise AccountManagementException("Error - Invalid Key in JSON") \
+                from key_error
 
 
-        deposit_iban = self.validate_iban(deposit_iban)
-        myregex = re.compile(r"^EUR [0-9]{4}\.[0-9]{2}")
-        res = myregex.fullmatch(deposit_amount)
-        if not res:
+        iban = self.validate_iban(iban)
+
+        if not re.fullmatch(r"^EUR [0-9]{4}\.[0-9]{2}", amount):
             raise AccountManagementException("Error - Invalid deposit amount")
 
-        d_a_f = float(deposit_amount[4:])
-        if d_a_f == 0:
+        deposit_amount = float(amount[4:])
+        if deposit_amount == 0:
             raise AccountManagementException("Error - Deposit must be greater than 0")
 
-        deposit_obj = AccountDeposit(to_iban=deposit_iban,
-                                     deposit_amount=d_a_f)
+        deposit = AccountDeposit(to_iban=iban,
+                                     deposit_amount=deposit_amount)
 
         try:
             with open(DEPOSITS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
-                d_l = json.load(file)
-        except FileNotFoundError as ex:
-            d_l = []
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
+                deposit_list = json.load(file)
+        except FileNotFoundError:
+            deposit_list = []
+        except json.JSONDecodeError as json_error:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
 
-        d_l.append(deposit_obj.to_json())
+        deposit_list.append(deposit.to_json())
 
         try:
             with open(DEPOSITS_STORE_FILE, "w", encoding="utf-8", newline="") as file:
-                json.dump(d_l, file, indent=2)
-        except FileNotFoundError as ex:
-            raise AccountManagementException("Wrong file  or file path") from ex
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
+                json.dump(deposit_list, file, indent=2)
+        except FileNotFoundError as file_error:
+            raise AccountManagementException("Wrong file  or file path") from file_error
+        except json.JSONDecodeError as json_error:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
 
-        return deposit_obj.deposit_signature
+        return deposit.deposit_signature
 
 
     def read_transactions_file(self):
