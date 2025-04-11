@@ -234,35 +234,35 @@ class AccountManager:
 
     def calculate_balance(self, iban:str)->bool:
         """calculate the balance for a given iban"""
-        iban = self.validate_iban(iban)
-        t_l = self.read_transactions_file()
-        iban_found = False
-        bal_s = 0
-        for transaction in t_l:
+        validate_iban = self.validate_iban(iban)
+        transactions = self.read_transactions_file()
+        tiene_transacciones = False
+        balance_total = 0
+        for transaction in transactions:
             #print(transaction["IBAN"] + " - " + iban)
-            if transaction["IBAN"] == iban:
-                bal_s += float(transaction["amount"])
-                iban_found = True
-        if not iban_found:
+            if transaction["IBAN"] == validate_iban:
+                balance_total += float(transaction["amount"])
+                tiene_transacciones = True
+        if not tiene_transacciones:
             raise AccountManagementException("IBAN not found")
 
-        last_balance = {"IBAN": iban,
+        historial_balances = {"IBAN": iban,
                         "time": datetime.timestamp(datetime.now(timezone.utc)),
-                        "BALANCE": bal_s}
+                        "BALANCE": balance_total}
 
         try:
             with open(BALANCES_STORE_FILE, "r", encoding="utf-8", newline="") as file:
                 balance_list = json.load(file)
         except FileNotFoundError:
             balance_list = []
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        except json.JSONDecodeError as json_error:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
 
-        balance_list.append(last_balance)
+        balance_list.append(historial_balances)
 
         try:
             with open(BALANCES_STORE_FILE, "w", encoding="utf-8", newline="") as file:
                 json.dump(balance_list, file, indent=2)
-        except FileNotFoundError as ex:
-            raise AccountManagementException("Wrong file  or file path") from ex
+        except FileNotFoundError as file_error:
+            raise AccountManagementException("Wrong file  or file path") from file_error
         return True
