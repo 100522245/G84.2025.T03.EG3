@@ -98,78 +98,74 @@ class AccountManager:
             raise AccountManagementException("Invalid date format")
         return transfer_date
 
+
     #pylint: disable=too-many-arguments
-    def transfer_request(self, from_iban: str,
-                         to_iban: str,
-                         concept: str,
-                         transfer_type: str,
-                         date: str,
-                         amount: float)->str:
+    def create_transfer_request(self, from_iban: str,
+                                to_iban: str,
+                                concept: str,
+                                transfer_type: str,
+                                transfer_date: str,
+                                amount: float)->str:
         """first method: receives transfer info and
         stores it into a file"""
         self.validate_iban(from_iban)
         self.validate_iban(to_iban)
         self.validate_concept(concept)
-        mr = re.compile(r"(ORDINARY|INMEDIATE|URGENT)")
-        res = mr.fullmatch(transfer_type)
 
-        objTransfer = TransferRequest(from_iban, transfer_type, to_iban,
-                                      concept, date, amount)
-        if not res:
+        if not re.fullmatch(r"(ORDINARY|INMEDIATE|URGENT)", transfer_type):
             raise AccountManagementException("Invalid transfer type")
-        self.validate_transfer_date(date)
 
-
+        self.validate_transfer_date(transfer_date)
 
         try:
-            f_amount  = float(amount)
-        except ValueError as exc:
-            raise AccountManagementException("Invalid transfer amount") from exc
+            transfer_amount  = float(amount)
+        except ValueError as value_error:
+            raise AccountManagementException("Invalid transfer amount") from value_error
 
-        n_str = str(f_amount)
-        if '.' in n_str:
-            decimales = len(n_str.split('.')[1])
-            if decimales > 2:
-                raise AccountManagementException("Invalid transfer amount")
+        if '.' in str(transfer_amount) and len(
+                str(transfer_amount).split('.')[1]) > 2:
+            raise AccountManagementException(
+                "Invalid transfer amount precision")
 
-        if f_amount < 10 or f_amount > 10000:
+        if transfer_amount < 10 or transfer_amount > 10000:
             raise AccountManagementException("Invalid transfer amount")
 
-        my_request = TransferRequest(from_iban=from_iban,
+        new_tranfer = TransferRequest(from_iban=from_iban,
                                      to_iban=to_iban,
                                      transfer_concept=concept,
                                      transfer_type=transfer_type,
-                                     transfer_date=date,
+                                     transfer_date=transfer_date,
                                      transfer_amount=amount)
 
         try:
             with open(TRANSFERS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
-                t_l = json.load(file)
+                transfer_list = json.load(file)
         except FileNotFoundError:
-            t_l = []
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
+            transfer_list = []
+        except json.JSONDecodeError as json_error:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
 
-        for t_i in t_l:
-            if (t_i["from_iban"] == my_request.from_iban and
-                    t_i["to_iban"] == my_request.to_iban and
-                    t_i["transfer_date"] == my_request.transfer_date and
-                    t_i["transfer_amount"] == my_request.transfer_amount and
-                    t_i["transfer_concept"] == my_request.transfer_concept and
-                    t_i["transfer_type"] == my_request.transfer_type):
+        for existe in transfer_list:
+            if (existe["from_iban"] == new_tranfer.from_iban and
+                    existe["to_iban"] == new_tranfer.to_iban and
+                    existe["transfer_date"] == new_tranfer.transfer_date and
+                    existe["transfer_amount"] == new_tranfer.transfer_amount and
+                    existe["transfer_concept"] == new_tranfer.transfer_concept and
+                    existe["transfer_type"] == new_tranfer.transfer_type):
                 raise AccountManagementException("Duplicated transfer in transfer list")
 
-        t_l.append(my_request.to_json())
+        transfer_list.append(new_tranfer.to_json())
 
         try:
             with open(TRANSFERS_STORE_FILE, "w", encoding="utf-8", newline="") as file:
-                json.dump(t_l, file, indent=2)
-        except FileNotFoundError as ex:
-            raise AccountManagementException("Wrong file  or file path") from ex
-        except json.JSONDecodeError as ex:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from ex
+                json.dump(transfer_list, file, indent=2)
+        except FileNotFoundError as file_error:
+            raise AccountManagementException("Wrong file  or file path") from file_error
+        except json.JSONDecodeError as json_error:
+            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
 
-        return my_request.transfer_code
+        return new_tranfer.transfer_code
+
 
     def deposit_into_account(self, input_file:str)->str:
         """manages the deposits received for accounts"""
