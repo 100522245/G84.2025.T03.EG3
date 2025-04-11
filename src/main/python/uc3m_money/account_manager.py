@@ -52,7 +52,7 @@ class AccountManager:
         # Mover los cuatro primeros caracteres al final
 
         # Convertir la cadena en un número entero
-        iban_integer = int(iban)
+        iban_integer = int(parte_numerica_iban)
 
         # Calcular el módulo 97
         mod_resultado = iban_integer % 97

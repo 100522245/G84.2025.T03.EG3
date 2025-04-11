@@ -60,11 +60,12 @@ class TestTransferRequestTest(TestCase):
 
                 if valid == "VALID":
                     with self.subTest(test_id + valid):
-                        valor = mngr.transfer_request(from_iban=iban_from,
+                        valor = mngr.create_transfer_request(
+                            from_iban=iban_from,
                                                       to_iban=iban_to,
                                                       transfer_type=transfer_type,
                                                       amount=number_amount,
-                                                      date=transfer_date,
+                                                      transfer_date=transfer_date,
                                                       concept=transfer_concept)
                         self.assertEqual(result, valor)
                         # Check if this DNI is store in storeRequest.json
@@ -124,11 +125,11 @@ class TestTransferRequestTest(TestCase):
         transfer_date = "22/03/2025"
         transfer_concept = "Testing duplicated transfers"
         mngr  = AccountManager()
-        mngr.transfer_request(from_iban=iban_from,
+        mngr.create_transfer_request(from_iban=iban_from,
                               to_iban=iban_to,
                               transfer_type=transfer_type,
                               amount=transfer_amount,
-                              date=transfer_date,
+                              transfer_date=transfer_date,
                               concept=transfer_concept)
 
         if os.path.isfile(TRANSFERS_STORE_FILE):
@@ -137,7 +138,7 @@ class TestTransferRequestTest(TestCase):
         else:
             hash_original = ""
         with self.assertRaises(AccountManagementException) as c_m:
-            mngr.transfer_request(from_iban=iban_from,
+            mngr.create_transfer_request(from_iban=iban_from,
                                   to_iban=iban_to,
                                   transfer_type=transfer_type,
                                   amount=transfer_amount,
