@@ -18,21 +18,20 @@ class AccountManager:
         pass
 
     @staticmethod
-    def valivan(ic: str):
+    def validate_iban(iban: str):
         """
     Calcula el dígito de control de un IBAN español.
 
     Args:
-        ic (str): El IBAN sin los dos últimos dígitos (dígito de control).
+        iban (str): El IBAN sin los dos últimos dígitos (dígito de control).
 
     Returns:
         str: El dígito de control calculado.
         """
-        mr = re.compile(r"^ES[0-9]{22}")
-        res = mr.fullmatch(ic)
-        if not res:
+        formato_iban = re.compile(r"^ES[0-9]{22}")
+        if not formato_iban.fullmatch(iban):
             raise AccountManagementException("Invalid IBAN format")
-        iban = ic
+        iban = iban
         original_code = iban[2:4]
         #replacing the control
         iban = iban[:2] + "00" + iban[4:]
@@ -68,7 +67,7 @@ class AccountManager:
             #print(dc)
             raise AccountManagementException("Invalid IBAN control digit")
 
-        return ic
+        return iban
 
     def validate_concept(self, concept: str):
         """regular expression for checking the minimum and maximum length as well as
@@ -107,11 +106,14 @@ class AccountManager:
                          amount: float)->str:
         """first method: receives transfer info and
         stores it into a file"""
-        self.valivan(from_iban)
-        self.valivan(to_iban)
+        self.validate_iban(from_iban)
+        self.validate_iban(to_iban)
         self.validate_concept(concept)
         mr = re.compile(r"(ORDINARY|INMEDIATE|URGENT)")
         res = mr.fullmatch(transfer_type)
+
+        objTransfer = TransferRequest(from_iban, transfer_type, to_iban,
+                                      concept, date, amount)
         if not res:
             raise AccountManagementException("Invalid transfer type")
         self.validate_transfer_date(date)
@@ -186,7 +188,7 @@ class AccountManager:
             raise AccountManagementException("Error - Invalid Key in JSON") from e
 
 
-        deposit_iban = self.valivan(deposit_iban)
+        deposit_iban = self.validate_iban(deposit_iban)
         myregex = re.compile(r"^EUR [0-9]{4}\.[0-9]{2}")
         res = myregex.fullmatch(deposit_amount)
         if not res:
@@ -235,7 +237,7 @@ class AccountManager:
 
     def calculate_balance(self, iban:str)->bool:
         """calculate the balance for a given iban"""
-        iban = self.valivan(iban)
+        iban = self.validate_iban(iban)
         t_l = self.read_transactions_file()
         iban_found = False
         bal_s = 0
