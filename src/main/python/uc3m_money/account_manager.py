@@ -66,14 +66,14 @@ class AccountManager:
 
         return iban
 
+
     def validate_concept(self, concept: str):
         """regular expression for checking the minimum and maximum length as well as
         the allowed characters and spaces restrictions
         there are other ways to check this"""
-        myregex = re.compile(r"^(?=^.{10,30}$)([a-zA-Z]+(\s[a-zA-Z]+)+)$")
-
-        res = myregex.fullmatch(concept)
-        if not res:
+        formato_concept = re.compile(r"^(?=^.{10,30}$)([a-zA-Z]+(\s["
+                                   r"a-zA-Z]+)+)$")
+        if not formato_concept.fullmatch(concept):
             raise AccountManagementException ("Invalid concept format")
 
     def validate_transfer_date(self, t_d):
@@ -94,6 +94,7 @@ class AccountManager:
         if my_date.year < 2025 or my_date.year > 2050:
             raise AccountManagementException("Invalid date format")
         return t_d
+
     #pylint: disable=too-many-arguments
     def transfer_request(self, from_iban: str,
                          to_iban: str,
