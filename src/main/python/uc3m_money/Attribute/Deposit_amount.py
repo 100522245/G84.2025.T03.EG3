@@ -4,8 +4,8 @@ from uc3m_money.Attribute.Transfer_amount import Transfer_amount
 
 class Deposit_amount(Attribute):
     def __init__(self, attr_value):
-        self._error_message = "Invalid deposit amount"
-        self._validation_pattern = r"^[0-9]{4}\.[0-9]{2}$"
+        self._error_message = "Error - Invalid deposit amount"
+        self._validation_pattern = r"^EUR [0-9]{4}\.[0-9]{2}"
         self._attr_value = self._validate(attr_value)
 
     def _validate(self, attr_value):

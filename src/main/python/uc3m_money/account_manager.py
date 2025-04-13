@@ -7,16 +7,10 @@ from uc3m_money.account_management_config import (TRANSFERS_STORE_FILE,
                                         DEPOSITS_STORE_FILE,
                                         TRANSACTIONS_STORE_FILE,
                                         BALANCES_STORE_FILE)
+from uc3m_money.iban_balance import IbanBalance
 
 from uc3m_money.transfer_request import TransferRequest
 from uc3m_money.account_deposit import AccountDeposit
-from uc3m_money.Attribute.Attribute import Attribute
-from uc3m_money.Attribute.IBAN import IBAN
-from uc3m_money.Attribute.Concept import Concept
-from uc3m_money.Attribute.Transfer_amount import Transfer_amount
-from uc3m_money.Attribute.Date import Date
-from uc3m_money.Attribute.Transfer_type import Transfer_type
-from uc3m_money.Attribute.Deposit_amount import Deposit_amount
 
 
 class AccountManager:
@@ -114,7 +108,7 @@ class AccountManager:
 
     def calculate_balance(self, iban:str)->bool:
         """calculate the balance for a given iban"""
-        iban_balance = IBAN(iban)
+        iban_balance = IbanBalance(iban)
         last_balance = iban_balance.to_json()
 
         try:
@@ -131,5 +125,5 @@ class AccountManager:
             with open(BALANCES_STORE_FILE, "w", encoding="utf-8", newline="") as file:
                 json.dump(balance_list, file, indent=2)
         except FileNotFoundError as file_error:
-            raise AccountManagementException("Wrong file  or file path") from file_error
+            raise AccountManagementException("Wrong file or file path") from file_error
         return True
