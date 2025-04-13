@@ -8,9 +8,9 @@ class Attribute():
         self._validation_pattern = r""
 
     def _validate(self, value):
-        myregex = re.compile(self._validation_pattern)
-        res = myregex.fullmatch(value)
-        if not res:
+        formato = re.compile(self._validation_pattern)
+        formato_fullmatch = formato.fullmatch(value)
+        if not formato_fullmatch:
             raise AccountManagementException(self._error_message)
         return value
 
