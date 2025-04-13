@@ -8,9 +8,10 @@ from uc3m_money.account_management_config import (TRANSFERS_STORE_FILE,
                                         TRANSACTIONS_STORE_FILE,
                                         BALANCES_STORE_FILE)
 from uc3m_money.iban_balance import IbanBalance
-
 from uc3m_money.transfer_request import TransferRequest
 from uc3m_money.account_deposit import AccountDeposit
+from uc3m_money.storage.transfers_json_store import TransfersJsonStore
+from uc3m_money.storage.deposits_json_store import DepositsJsonStore
 
 
 class AccountManager:
@@ -27,41 +28,17 @@ class AccountManager:
                                 amount: float)->str:
         """first method: receives transfer info and
         stores it into a file"""
-        new_tranfer = TransferRequest(from_iban=from_iban,
+        new_transfer = TransferRequest(from_iban=from_iban,
                                      to_iban=to_iban,
                                      transfer_concept=concept,
                                      transfer_type=transfer_type,
                                      transfer_date=transfer_date,
                                      transfer_amount=amount)
 
-        try:
-            with open(TRANSFERS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
-                transfer_list = json.load(file)
-        except FileNotFoundError:
-            transfer_list = []
-        except json.JSONDecodeError as json_error:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
+        transfer_store = TransfersJsonStore()
+        transfer_store.add_item(new_transfer)
 
-        for existe in transfer_list:
-            if (existe["from_iban"] == new_tranfer.from_iban and
-                    existe["to_iban"] == new_tranfer.to_iban and
-                    existe["transfer_date"] == new_tranfer.transfer_date and
-                    existe["transfer_amount"] == new_tranfer.transfer_amount and
-                    existe["transfer_concept"] == new_tranfer.transfer_concept and
-                    existe["transfer_type"] == new_tranfer.transfer_type):
-                raise AccountManagementException("Duplicated transfer in transfer list")
-
-        transfer_list.append(new_tranfer.to_json())
-
-        try:
-            with open(TRANSFERS_STORE_FILE, "w", encoding="utf-8", newline="") as file:
-                json.dump(transfer_list, file, indent=2)
-        except FileNotFoundError as file_error:
-            raise AccountManagementException("Wrong file  or file path") from file_error
-        except json.JSONDecodeError as json_error:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
-
-        return new_tranfer.transfer_code
+        return new_transfer.transfer_code
 
 
     def deposit_into_account(self, input_file:str)->str:
@@ -85,23 +62,8 @@ class AccountManager:
         deposit = AccountDeposit(to_iban=deposit_iban,
                                      deposit_amount=deposit_amount)
 
-        try:
-            with open(DEPOSITS_STORE_FILE, "r", encoding="utf-8", newline="") as file:
-                deposit_list = json.load(file)
-        except FileNotFoundError:
-            deposit_list = []
-        except json.JSONDecodeError as json_error:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
-
-        deposit_list.append(deposit.to_json())
-
-        try:
-            with open(DEPOSITS_STORE_FILE, "w", encoding="utf-8", newline="") as file:
-                json.dump(deposit_list, file, indent=2)
-        except FileNotFoundError as file_error:
-            raise AccountManagementException("Wrong file  or file path") from file_error
-        except json.JSONDecodeError as json_error:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
+        deposits_json_store = DepositsJsonStore()
+        deposits_json_store.add_item(deposit)
 
         return deposit.deposit_signature
 

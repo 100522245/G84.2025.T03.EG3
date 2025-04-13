@@ -9,9 +9,9 @@ from uc3m_money.Attribute.IBAN import IBAN
 class IbanBalance():
     def __init__(self, iban_code):
         self._iban = IBAN(iban_code).value
-        self._last_balance_time = datetime.timestamp(datetime.now(
+        self.__last_balance_time = datetime.timestamp(datetime.now(
             timezone.utc))
-        self._balance = self.calculate_account_balance()
+        self.__balance = self.calculate_account_balance()
 
     def calculate_account_balance(self):
         transactions_list = self.read_transactions_file()
@@ -26,8 +26,8 @@ class IbanBalance():
         return current_balance
 
     def to_json(self):
-        return {"IBAN": self._iban, "time": self._last_balance_time,
-                "BALANCE": self._balance}
+        return {"IBAN": self._iban, "time": self.__last_balance_time,
+                "BALANCE": self.__balance}
 
     def read_transactions_file(self):
         try:
