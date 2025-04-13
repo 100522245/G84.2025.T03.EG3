@@ -1,4 +1,5 @@
 from uc3m_money.Attribute.Attribute import Attribute
+
 class Concept(Attribute):
     def __init__(self, attr_value):
         self._error_message = "Invalid concept format"
