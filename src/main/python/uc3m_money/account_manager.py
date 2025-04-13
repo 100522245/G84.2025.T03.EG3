@@ -108,12 +108,9 @@ class AccountManager:
                                 amount: float)->str:
         """first method: receives transfer info and
         stores it into a file"""
-        self.validate_concept(concept)
 
         if not re.fullmatch(r"(ORDINARY|INMEDIATE|URGENT)", transfer_type):
             raise AccountManagementException("Invalid transfer type")
-
-        self.validate_transfer_date(transfer_date)
 
         try:
             transfer_amount  = float(amount)
