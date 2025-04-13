@@ -1,3 +1,4 @@
+from .Attribute import Attribute
 class IBAN(Attribute):
     def __init__(self, attr_value):
         self._error_message = "Invalid IBAN format"

@@ -125,7 +125,7 @@ class AccountManager:
         if '.' in str(transfer_amount) and len(
                 str(transfer_amount).split('.')[1]) > 2:
             raise AccountManagementException(
-                "Invalid transfer amount precision")
+                "Invalid transfer amount")
 
         if transfer_amount < 10 or transfer_amount > 10000:
             raise AccountManagementException("Invalid transfer amount")

@@ -1,6 +1,5 @@
 import re
-from uc3m_money import AccountManagementException
-
+from uc3m_money.exceptions import AccountManagementException
 
 class Attribute():
     def __init__(self):

@@ -11,6 +11,8 @@ from uc3m_money import (JSON_FILES_PATH,
                         AccountManager,
                         TransferRequest,
                         AccountManagementException)
+from uc3m_money.Attribute.Concept import Concept
+from uc3m_money.Attribute import Attribute
 
 class TestTransferRequestTest(TestCase):
     """Class for testing deliver_product"""
@@ -96,11 +98,12 @@ class TestTransferRequestTest(TestCase):
                         else:
                             hash_original = ""
                         with self.assertRaises(AccountManagementException) as c_m:
-                            valor = mngr.transfer_request(from_iban=iban_from,
+                            valor = mngr.create_transfer_request(
+                                from_iban=iban_from,
                                                           to_iban=iban_to,
                                                           transfer_type=transfer_type,
                                                           amount=number_amount,
-                                                          date=transfer_date,
+                                                          transfer_date=transfer_date,
                                                           concept=transfer_concept)
                         self.assertEqual(c_m.exception.message, result)
 
@@ -142,7 +145,7 @@ class TestTransferRequestTest(TestCase):
                                   to_iban=iban_to,
                                   transfer_type=transfer_type,
                                   amount=transfer_amount,
-                                  date=transfer_date,
+                                  transfer_date=transfer_date,
                                   concept=transfer_concept)
         self.assertEqual(c_m.exception.message, "Duplicated transfer in transfer list")
 
@@ -166,11 +169,11 @@ class TestTransferRequestTest(TestCase):
         transfer_date = "22/03/2025"
         transfer_concept = "Testing duplicated transfers"
         mngr  = AccountManager()
-        res = mngr.transfer_request(from_iban=iban_from,
+        res = mngr.create_transfer_request(from_iban=iban_from,
                                     to_iban=iban_to,
                                     transfer_type=transfer_type,
                                     amount=transfer_amount,
-                                    date=transfer_date,
+                                    transfer_date=transfer_date,
                                     concept=transfer_concept)
         self.assertEqual("c5477f9dcde7275021eab0bd58bb8175",res)
         my_data = self.read_file()
@@ -200,11 +203,11 @@ class TestTransferRequestTest(TestCase):
             transfer_date = "23/03/2025"
             transfer_concept = "Testing duplicated transfers"
             mngr = AccountManager()
-            res = mngr.transfer_request(from_iban=iban_from,
+            res = mngr.create_transfer_request(from_iban=iban_from,
                                         to_iban=iban_to,
                                         transfer_type=transfer_type,
                                         amount=transfer_amount,
-                                        date=transfer_date,
+                                        transfer_date=transfer_date,
                                         concept=transfer_concept)
             self.assertEqual("b04ac19f692944771fc66c97b1072757", res)
             my_data = self.read_file()
@@ -241,11 +244,11 @@ class TestTransferRequestTest(TestCase):
         else:
             hash_original = ""
         with self.assertRaises(AccountManagementException) as c_m:
-            mngr.transfer_request(from_iban=iban_from,
+            mngr.create_transfer_request(from_iban=iban_from,
                                   to_iban=iban_to,
                                   transfer_type=transfer_type,
                                   amount=transfer_amount,
-                                  date=transfer_date,
+                                  transfer_date=transfer_date,
                                   concept=transfer_concept)
         self.assertEqual(c_m.exception.message, "Transfer date must be today or later.")
 

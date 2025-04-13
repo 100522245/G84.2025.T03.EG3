@@ -2,6 +2,8 @@
 import hashlib
 import json
 from datetime import datetime, timezone
+from uc3m_money.Attribute.Concept import Concept
+from uc3m_money.Attribute import Attribute
 
 class TransferRequest:
     """Class representing a transfer request"""
