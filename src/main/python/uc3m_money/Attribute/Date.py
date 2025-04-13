@@ -25,4 +25,5 @@ class Date(Attribute):
 
         if fecha_convertida.year < 2025 or fecha_convertida.year > 2050:
             raise AccountManagementException("Invalid date format")
-        return transfer_date
+
+        return attr_value

@@ -6,6 +6,7 @@ from uc3m_money.Attribute.Concept import Concept
 from uc3m_money.Attribute.IBAN import IBAN
 from uc3m_money.Attribute.Date import Date
 from uc3m_money.Attribute.Transfer_type import Transfer_type
+from uc3m_money.Attribute.Transfer_amount import Transfer_amount
 
 class TransferRequest:
     """Class representing a transfer request"""
@@ -22,7 +23,7 @@ class TransferRequest:
         self.__transfer_type = Transfer_type(transfer_type).value
         self.__concept = Concept(transfer_concept).value
         self.__transfer_date = Date(transfer_date).value
-        self.__transfer_amount = transfer_amount
+        self.__transfer_amount = Transfer_amount(transfer_amount).value
         justnow = datetime.now(timezone.utc)
         self.__time_stamp = datetime.timestamp(justnow)
 
