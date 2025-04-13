@@ -108,8 +108,6 @@ class AccountManager:
                                 amount: float)->str:
         """first method: receives transfer info and
         stores it into a file"""
-        self.validate_iban(from_iban)
-        self.validate_iban(to_iban)
         self.validate_concept(concept)
 
         if not re.fullmatch(r"(ORDINARY|INMEDIATE|URGENT)", transfer_type):

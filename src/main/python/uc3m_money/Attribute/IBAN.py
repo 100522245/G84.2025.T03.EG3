@@ -1,15 +1,17 @@
 from .Attribute import Attribute
+from uc3m_money.account_management_exception import AccountManagementException
+
 class IBAN(Attribute):
     def __init__(self, attr_value):
         self._error_message = "Invalid IBAN format"
         self._validation_pattern = r"^ES[0-9]{22}"
         self._attr_value = self._validate(attr_value)
 
-    def _validate(self, attr_value:str)->str:
+    def _validate_iban(self, attr_value:str)->str:
         """method for validating an iban"""
-        super()._validate(attr_value)
-
+        attr_value = super()._validate(attr_value)
         iban = attr_value
+
         digitos_control = iban[2:4]
         # replacing the control
         parte_numerica_iban = iban[:2] + "00" + iban[4:]
@@ -30,8 +32,10 @@ class IBAN(Attribute):
                                                                         '34').replace(
                 'Z', '35'))
 
+        # Mover los cuatro primeros caracteres al final
+
         # Convertir la cadena en un número entero
-        iban_integer = int(iban)
+        iban_integer = int(parte_numerica_iban)
 
         # Calcular el módulo 97
         mod_resultado = iban_integer % 97
@@ -43,4 +47,5 @@ class IBAN(Attribute):
             # print(digitos_control_esperados)
             raise AccountManagementException("Invalid IBAN control digit")
 
-        return iban
+        return attr_value
+

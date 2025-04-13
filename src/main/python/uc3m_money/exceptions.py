@@ -1,2 +1,0 @@
-class AccountManagementException(Exception):
-    pass
