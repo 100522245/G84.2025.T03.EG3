@@ -9,7 +9,7 @@ class Date(Attribute):
                                 r"0-2])\/\d\d\d\d)$")
         self._attr_value = self._validate(attr_value)
 
-    def _validate_transfer_date(self, attr_value):
+    def _validate(self, attr_value):
         attr_value = super()._validate(attr_value)
 
         transfer_date = attr_value

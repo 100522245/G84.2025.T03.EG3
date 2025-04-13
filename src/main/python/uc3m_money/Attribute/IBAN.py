@@ -7,7 +7,7 @@ class IBAN(Attribute):
         self._validation_pattern = r"^ES[0-9]{22}"
         self._attr_value = self._validate(attr_value)
 
-    def _validate_iban(self, attr_value:str)->str:
+    def _validate(self, attr_value:str)->str:
         """method for validating an iban"""
         attr_value = super()._validate(attr_value)
         iban = attr_value
