@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from uc3m_money.account_management_config import TRANSACTIONS_STORE_FILE
 from uc3m_money.account_management_exception import AccountManagementException
-from uc3m_money.Attribute.IBAN import IBAN
+from uc3m_money.data.Attribute.IBAN import IBAN
 
 
 class IbanBalance():

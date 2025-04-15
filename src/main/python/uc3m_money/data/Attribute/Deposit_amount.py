@@ -1,6 +1,6 @@
 from .Attribute import Attribute
 from uc3m_money.account_management_exception import AccountManagementException
-from uc3m_money.Attribute.Transfer_amount import Transfer_amount
+
 
 class Deposit_amount(Attribute):
     def __init__(self, attr_value):

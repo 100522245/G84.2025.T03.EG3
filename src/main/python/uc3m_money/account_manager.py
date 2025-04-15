@@ -12,6 +12,7 @@ from uc3m_money.transfer_request import TransferRequest
 from uc3m_money.account_deposit import AccountDeposit
 from uc3m_money.storage.transfers_json_store import TransfersJsonStore
 from uc3m_money.storage.deposits_json_store import DepositsJsonStore
+from uc3m_money.storage.balances_json_store import BalancesJsonStore
 
 
 class AccountManager:
@@ -71,21 +72,8 @@ class AccountManager:
     def calculate_balance(self, iban:str)->bool:
         """calculate the balance for a given iban"""
         iban_balance = IbanBalance(iban)
-        last_balance = iban_balance.to_json()
 
-        try:
-            with open(BALANCES_STORE_FILE, "r", encoding="utf-8", newline="") as file:
-                balance_list = json.load(file)
-        except FileNotFoundError:
-            balance_list = []
-        except json.JSONDecodeError as json_error:
-            raise AccountManagementException("JSON Decode Error - Wrong JSON Format") from json_error
+        balance_store = BalancesJsonStore()
+        balance_store.add_item(iban_balance)
 
-        balance_list.append(last_balance)
-
-        try:
-            with open(BALANCES_STORE_FILE, "w", encoding="utf-8", newline="") as file:
-                json.dump(balance_list, file, indent=2)
-        except FileNotFoundError as file_error:
-            raise AccountManagementException("Wrong file or file path") from file_error
         return True

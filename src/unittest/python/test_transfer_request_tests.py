@@ -11,8 +11,7 @@ from uc3m_money import (JSON_FILES_PATH,
                         AccountManager,
                         TransferRequest,
                         AccountManagementException)
-from uc3m_money.Attribute.Concept import Concept
-from uc3m_money.Attribute import Attribute
+
 
 class TestTransferRequestTest(TestCase):
     """Class for testing deliver_product"""

@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from uc3m_money.Attribute.Attribute import Attribute
+from uc3m_money.data.Attribute.Attribute import Attribute
 from uc3m_money.account_management_exception import AccountManagementException
 
 class Date(Attribute):

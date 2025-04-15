@@ -1,4 +1,4 @@
-from uc3m_money.Attribute.Attribute import Attribute
+from uc3m_money.data.Attribute.Attribute import Attribute
 
 class Transfer_type(Attribute):
     def __init__(self, attr_value):
