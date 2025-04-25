@@ -1,7 +1,11 @@
+"""Importaciones"""
+# pylint: disable = [invalid-name]
 import re
 from uc3m_money.account_management_exception import AccountManagementException
 
-class Attribute():
+# pylint: disable = [too-few-public-methods]
+class Attribute:
+    """Clase Attribute"""
     def __init__(self):
         self._attr_value = ""
         self._error_message = ""
@@ -16,6 +20,7 @@ class Attribute():
 
     @property
     def value(self):
+        """Property value"""
         return self._attr_value
 
     @value.setter

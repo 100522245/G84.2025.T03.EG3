@@ -1,15 +1,22 @@
-from .Attribute import Attribute
+"""Importaciones"""
+# pylint: disable = [invalid-name]
+# pylint: disable = [relative-beyond-top-level]
 from uc3m_money.account_management_exception import AccountManagementException
+from .Attribute import Attribute
+
 
 class Transfer_amount(Attribute):
+    """Clase Transfer_amount(Attribute)"""
+    # pylint: disable = [too-few-public-methods]
     def __init__(self, attr_value):
+        super().__init__()
         self._error_message = "Invalid transfer amount"
         self._validation_pattern = r""
         self._attr_value = self._validate(attr_value)
 
-    def _validate(self, attr_value:str)->str:
+    def _validate(self, value:str)->str:
         """method for validating an amount"""
-        amount = attr_value
+        amount = value
 
         try:
             transfer_amount  = float(amount)
@@ -24,4 +31,4 @@ class Transfer_amount(Attribute):
         if transfer_amount < 10 or transfer_amount > 10000:
             raise AccountManagementException("Invalid transfer amount")
 
-        return attr_value
+        return value

@@ -230,7 +230,6 @@ class TestCalculateBalance(TestCase):
 
         self.assertEqual(hash_new, hash_original)
 
-
     def rename_file(self, old_name, new_name):
         """renames a file (if it exists)"""
         if os.path.isfile(old_name):

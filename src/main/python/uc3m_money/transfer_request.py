@@ -8,6 +8,7 @@ from uc3m_money.data.Attribute.Date import Date
 from uc3m_money.data.Attribute.Transfer_type import Transfer_type
 from uc3m_money.data.Attribute.Transfer_amount import Transfer_amount
 
+
 class TransferRequest:
     """Class representing a transfer request"""
     #pylint: disable=too-many-arguments

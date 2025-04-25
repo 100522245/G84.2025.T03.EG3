@@ -4,7 +4,7 @@ import hashlib
 from uc3m_money.data.Attribute.IBAN import IBAN
 from uc3m_money.data.Attribute.Deposit_amount import Deposit_amount
 
-class AccountDeposit():
+class AccountDeposit:
     """Class representing the information required for shipping of an order"""
 
     def __init__(self,
