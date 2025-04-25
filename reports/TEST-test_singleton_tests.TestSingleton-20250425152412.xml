@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="test_singleton_tests.TestSingleton-20250425152412" tests="4" file="test_singleton_tests.py" time="0.007" timestamp="2025-04-25T15:24:13" failures="0" errors="0" skipped="0">
+	<testcase classname="test_singleton_tests.TestSingleton" name="test_account_manager_singleton" time="0.000" timestamp="2025-04-25T15:24:13"/>
+	<testcase classname="test_singleton_tests.TestSingleton" name="test_balances_json_store" time="0.000" timestamp="2025-04-25T15:24:13"/>
+	<testcase classname="test_singleton_tests.TestSingleton" name="test_deposit_json_store" time="0.000" timestamp="2025-04-25T15:24:13"/>
+	<testcase classname="test_singleton_tests.TestSingleton" name="test_transfer_json_store_store" time="0.007" timestamp="2025-04-25T15:24:13"/>
+</testsuite>
